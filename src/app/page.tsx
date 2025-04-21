@@ -1,103 +1,139 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState, useEffect } from "react";
+
+export default function Home({
+  searchParams,
+}: {
+  searchParams: { query?: string; page?: string };
+}) {
+  const [photos, setPhotos] = useState<any[]>([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageData, setSelectedImageData] = useState<any | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const page = parseInt(searchParams.page || "1");
+  const query = searchParams.query || "";
+  const perPage = 30;
+
+  const isSearching = query.trim().length > 0;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const url = isSearching
+          ? `https://api.unsplash.com/search/photos?query=${query}&page=${page}&per_page=${perPage}&client_id=RNK_QDDJzZm_9BIFw04b0swgRydz3pyJNFp45UxG0zE`
+          : `https://api.unsplash.com/photos?page=${page}&per_page=${perPage}&client_id=RNK_QDDJzZm_9BIFw04b0swgRydz3pyJNFp45UxG0zE`;
+
+        const res = await fetch(url, { cache: "no-store" });
+        const data = await res.json();
+        setPhotos(isSearching ? data.results : data);
+      } catch (err) {
+        setError("Erreur lors du chargement des données");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [query, page, isSearching]);
+
+  const handleImageClick = async (imageId: string) => {
+    const res = await fetch(
+      `https://api.unsplash.com/photos/${imageId}?client_id=RNK_QDDJzZm_9BIFw04b0swgRydz3pyJNFp45UxG0zE`
+    );
+    const imageData = await res.json();
+    setSelectedImage(imageData.urls.regular);
+    setSelectedImageData(imageData);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+    setSelectedImageData(null);
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div style={{ color: "red" }}>{error}</div>;
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div style={{ padding: "20px" }}>
+      <h1>
+        {isSearching ? `Résultats pour "${query}"` : `Photos populaires`} (Page{" "}
+        {page})
+      </h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      <div className="photo-grid">
+        {photos.map((image: any) => (
+          <img
+            key={image.id}
+            src={image.urls.small}
+            alt={image.alt_description || "Unsplash Image"}
+            style={{ cursor: "pointer", margin: "10px" }}
+            onClick={() => handleImageClick(image.id)} // Khi click vào ảnh
+          />
+        ))}
+      </div>
+
+      {/* Modal */}
+      {selectedImage && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 999,
+          }}
+          onClick={closeModal} // Đóng khi click vào overlay
+        >
+          <div
+            style={{
+              maxWidth: "90%",
+              maxHeight: "90%",
+              position: "relative",
+              textAlign: "center",
+            }}
+            onClick={(e) => e.stopPropagation()} // Ngừng sự kiện click khi click vào ảnh
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+            <img
+              src={selectedImage}
+              alt={selectedImageData?.alt_description || "Image"}
+              style={{ width: "100%", borderRadius: "8px" }}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <p style={{ color: "white", marginTop: "10px" }}>
+              Photo by <strong>{selectedImageData?.user.name}</strong> on{" "}
+              <a
+                href={selectedImageData?.links.html}
+                target="_blank"
+                style={{ color: "lightblue" }}
+              >
+                Unsplash
+              </a>
+            </p>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
+      )}
+
+      <div style={{ marginTop: "30px", textAlign: "center" }}>
+        {page > 1 && (
+          <a href={`/?query=${query}&page=${page - 1}`}>
+            <button style={{ marginRight: "10px", padding: "10px 20px" }}>
+              Previous
+            </button>
+          </a>
+        )}
+        <a href={`/?query=${query}&page=${page + 1}`}>
+          <button style={{ padding: "10px 20px" }}>Next</button>
         </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
