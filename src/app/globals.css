@@ -134,7 +134,7 @@ header {
   max-width: 1400px;
   margin: 100px auto 20px;
   columns: 3; /* Số cột */
-  column-gap: 0; /* Xóa khoảng cách giữa các cột */
+  column-gap: 10; /* Xóa khoảng cách giữa các cột */
   padding: 0; /* Đảm bảo không có padding */
   line-height: 0; /* Xóa khoảng cách dọc do line-height */
 }
