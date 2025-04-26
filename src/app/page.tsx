@@ -1,8 +1,6 @@
-// app/page.tsx
-
-import ImageGallery from "./ImageGallery";
-
-const perPage = 30;
+import { getPhotos, searchPhotos } from "@/services/unplashService";
+import ImageGallery from "../components/ImageGallery";
+import Banner from "@/components/Banner";
 
 export default async function Home({
   searchParams,
@@ -13,13 +11,23 @@ export default async function Home({
   const query = searchParams.query || "";
   const isSearching = query.trim().length > 0;
 
-  const url = isSearching
-    ? `https://api.unsplash.com/search/photos?query=${query}&page=${page}&per_page=${perPage}&client_id=RNK_QDDJzZm_9BIFw04b0swgRydz3pyJNFp45UxG0zE`
-    : `https://api.unsplash.com/photos?page=${page}&per_page=${perPage}&client_id=RNK_QDDJzZm_9BIFw04b0swgRydz3pyJNFp45UxG0zE`;
+  let photos;
 
-  const res = await fetch(url, { cache: "no-store" });
-  const data = await res.json();
-  const photos = isSearching ? data.results : data;
+  try {
+    if (isSearching) {
+      photos = await searchPhotos(query, page);
+    } else {
+      photos = await getPhotos(page);
+    }
+  } catch (error) {
+    console.error("Error fetching photos:", error);
+    return <div>Error fetching photos. Please try again later.</div>;
+  }
 
-  return <ImageGallery photos={photos} query={query} page={page} />;
+  return (
+    <div>
+      <Banner />
+      <ImageGallery photos={photos} query={query} page={page} />
+    </div>
+  );
 }
