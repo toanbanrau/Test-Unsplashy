@@ -39,13 +39,13 @@ export default function ImageGallery({
   const closeModal = () => {
     setSelectedImage(null);
     setSelectedImageData(null);
-    router.replace("/", { scroll: false });
+    router.back();
   };
 
   return (
     <div className="gallery-container">
       <div className="gallery-grid">
-        {photos.map((image:IUnplash) => (
+        {photos.map((image: IUnplash) => (
           <div
             key={image.id}
             className="gallery-item"
