@@ -1,20 +1,25 @@
 export interface IUnplash {
   id: string;
-  created_at?: string; 
-  alt_description?: string; 
+  created_at?: string;
+  alt_description?: string;
   urls: {
     small: string;
-    regular: string; 
+    regular: string;
     full: string;
   };
-  user: {
-    name: string; 
-    username: string; 
-    links: IUserLinks; 
+  user: IUser;
+  likes?: number;
+  links: IUserLinks;
+}
+interface IUser {
+  name: string;
+  username: string;
+  links: IUserLinks;
+  profile_image: {
+    medium: string; // Định nghĩa kiểu cho `profile_image.medium`
   };
-  likes?: number; 
 }
 
-export interface IUserLinks {
+ interface IUserLinks {
   html: string;
 }

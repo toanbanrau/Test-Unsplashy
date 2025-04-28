@@ -9,7 +9,7 @@ import { IUnplash } from "@/interfaces/unplash";
 interface ImageGalleryProps {
   photos: IUnplash[];
   query: string;
-  page: number;
+  page: number; // Thay đổi từ string thành number
 }
 
 export default function ImageGallery({
@@ -17,8 +17,8 @@ export default function ImageGallery({
   query,
   page,
 }: ImageGalleryProps) {
-  const [selectedImage, setSelectedImage] = useState<IUnplash[] | null>(null);
-  const [selectedImageData, setSelectedImageData] = useState<IUnplash[] | null>(
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageData, setSelectedImageData] = useState<IUnplash | null>(
     null
   );
   const router = useRouter();
@@ -96,9 +96,10 @@ export default function ImageGallery({
               />
             </div>
             <p className="modal-text">
-              Photo by <strong>{selectedImageData?.user.name}</strong> on{" "}
+              Photo by
+              <strong>{selectedImageData?.user.name || "Photographer"} </strong>
               <a
-                href={selectedImageData?.links.html}
+                href={selectedImageData?.user?.links.html}
                 target="_blank"
                 className="modal-link"
               >
