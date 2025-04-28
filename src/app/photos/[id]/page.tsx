@@ -38,7 +38,7 @@ export default async function PhotoDetail({
           </div>
 
           <div className="unsplash-description">
-            {data.description && <p className="caption">{data.description}</p>}
+            {/* {data.description && <p className="caption">{data.description}</p>} */}
             <a href={data.links.html} target="_blank" rel="noreferrer">
               Xem trên Unsplash
             </a>

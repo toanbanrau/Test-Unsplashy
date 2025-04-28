@@ -1,32 +1,32 @@
-// components/Footer.tsx
+import "../assets/styles/footer.css";
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 text-sm text-gray-600 mt-10">
-      <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div className="flex flex-wrap gap-4">
-          <a href="#" className="hover:underline">
+    <footer className="footer">
+      <div className="footer-container">
+        <div className="footer-links">
+          <a href="#" className="footer-link">
             Explore
           </a>
-          <a href="#" className="hover:underline">
+          <a href="#" className="footer-link">
             Advertise
           </a>
-          <a href="#" className="hover:underline">
+          <a href="#" className="footer-link">
             Blog
           </a>
-          <a href="#" className="hover:underline">
+          <a href="#" className="footer-link">
             API
           </a>
-          <a href="#" className="hover:underline">
+          <a href="#" className="footer-link">
             Jobs
           </a>
-          <a href="#" className="hover:underline">
+          <a href="#" className="footer-link">
             Privacy
           </a>
-          <a href="#" className="hover:underline">
+          <a href="#" className="footer-link">
             Terms
           </a>
         </div>
-        <p className="text-center md:text-right">
+        <p className="footer-text">
           © {new Date().getFullYear()} Unsplash Clone by You.
         </p>
       </div>
