@@ -19,7 +19,7 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <Header />
 
-        <main style={{ padding: "100px" }}>{children}</main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
