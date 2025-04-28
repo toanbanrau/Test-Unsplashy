@@ -9,8 +9,6 @@ const Header = () => {
           <Link href={"/"}>
             <svg
               className="FrJfL"
-              width="32"
-              height="32"
               viewBox="0 0 32 32"
               version="1.1"
               aria-labelledby="accueil-unsplash"
@@ -39,19 +37,7 @@ const Header = () => {
           <a href="#" className="submit">
             Envoyer une image
           </a>
-          <span className="icon bell">
-            <svg
-              className="JUlrU"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              version="1.1"
-              aria-hidden="false"
-            >
-              <desc lang="en-US">Bell</desc>
-              <path d="M18 15V9c0-3.3-2.7-6-6-6S6 5.7 6 9v6l-2 2v2h16v-2l-2-2ZM6.8 17 8 15.8V9c0-2.2 1.8-4 4-4s4 1.8 4 4v6.8l1.2 1.2H6.8Zm2.7 3h5c0 1.4-1.1 2.5-2.5 2.5S9.5 21.4 9.5 20Z"></path>
-            </svg>
-          </span>
+          <span className="icon bell">🔔</span>
           <span className="icon user">👤</span>
           <span className="icon menu">☰</span>
         </div>
