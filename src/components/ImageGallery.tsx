@@ -22,8 +22,16 @@ export default function ImageGallery({
     null
   );
   const router = useRouter();
+  const isMobile = () => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth <= 768; // hoặc 640 tùy breakpoint
+  };
 
   const handleImageClick = async (imageId: string) => {
+    if (isMobile()) {
+      router.push(`/photos/${imageId}`);
+      return;
+    }
     setSelectedImage(null);
     setSelectedImageData(null);
 
