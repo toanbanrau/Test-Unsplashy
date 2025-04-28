@@ -86,11 +86,12 @@
   font-weight: 500;
 }
 
-.category-nav a.active:hover {
+.category-nav a.active:hover{
   color: #111;
   border-bottom: 2px solid #111;
   padding-bottom: 5px;
 }
+
 
 .category-nav a:hover {
   color: #111;
