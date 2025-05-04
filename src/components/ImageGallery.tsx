@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { getPhoto } from "@/services/unplashService";
 import "../assets/styles/imagegallery.css";
 import { IUnplash } from "@/interfaces/unplash";
+import Image from "next/image";
 
 interface ImageGalleryProps {
   photos: IUnplash[];
@@ -59,11 +60,18 @@ export default function ImageGallery({
             className="gallery-item"
             onClick={() => handleImageClick(image.id)}
           >
-            <img
+            <Image
+              width={300}
+              height={400}
               src={image.urls.small}
               alt={image.alt_description || "Unsplash Image"}
               className="gallery-image"
             />
+            {/* <img
+              src={image.urls.small}
+              alt={image.alt_description || "Unsplash Image"}
+              className="gallery-image"
+            /> */}
           </div>
         ))}
       </div>

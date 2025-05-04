@@ -2,6 +2,7 @@ import { getPhoto } from "@/services/unplashService";
 
 import React from "react";
 import "../../../assets/styles/imagedetail.css";
+import Image from "next/image";
 
 export default async function PhotoDetail({
   params,
@@ -16,7 +17,12 @@ export default async function PhotoDetail({
       <div className="unsplash-container">
         <div className="unsplash-main">
           <div className="unsplash-author">
-            <img src={data.user.profile_image.medium} alt={data.user.name} />
+            <Image
+              width={40}
+              height={40}
+              src={data.user.profile_image.medium}
+              alt={data.user.name}
+            />
             <div className="author-info">
               <p>{data.user.name}</p>
               <a
@@ -31,10 +37,13 @@ export default async function PhotoDetail({
           </div>
 
           <div className="unsplash-image">
-            <img
-              src={data.urls.regular}
-              alt={data.alt_description || "Ảnh từ Unsplash"}
-            />
+            <div>
+              <Image
+                fill
+                src={data.urls.regular}
+                alt={data.alt_description || "Ảnh từ Unsplash"}
+              />
+            </div>
           </div>
 
           <div className="unsplash-description">
