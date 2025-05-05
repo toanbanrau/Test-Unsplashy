@@ -1,34 +1,11 @@
-import { getPhotos, searchPhotos } from "@/services/unplashService";
-import ImageGallery from "../components/ImageGallery";
-import Banner from "@/components/Banner";
+import CallBackExample from "./components/CallbackExample";
+import MemoExample from "./components/MemoExample";
 
-// Correctly define the type for `searchParams`
-interface PageProps {
-  searchParams: Record<string, string | undefined>;
-}
-
-export default async function Home({ searchParams }: PageProps) {
-  const page = parseInt(searchParams.page || "1", 10);
-  const query = searchParams.query || "";
-  const isSearching = query.trim().length > 0;
-
-  let photos;
-
-  try {
-    if (isSearching) {
-      photos = await searchPhotos(query, page);
-      return;
-    }
-    photos = await getPhotos(page);
-  } catch (error) {
-    console.error("Error fetching photos:", error);
-    return <div>Error fetching photos. Please try again later.</div>;
-  }
-
+export default async function Home() {
   return (
     <div>
-      <Banner />
-      <ImageGallery photos={photos} query={query} page={page} />
+      <MemoExample />
+      <CallBackExample />
     </div>
   );
 }
