@@ -15,15 +15,15 @@ export default async function Home({ searchParams }: PageProps) {
   let photos;
 
   try {
-    // early return 
+    // early return
     if (isSearching) {
       photos = await searchPhotos(query, page);
-      return 
+      return;
     }
-      photos = await getPhotos(page);
+    photos = await getPhotos(page);
   } catch (error) {
     console.error("Error fetching photos:", error);
-    return <div>Error fetching photos. Please try again later.</div>;
+    return alert("Error fetching photos. Please try again later.");
   }
 
   return (
