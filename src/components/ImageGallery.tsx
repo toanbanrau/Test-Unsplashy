@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getPhoto } from "@/services/unplashService";
 import "../assets/styles/imagegallery.css";
 import { IUnplash } from "@/interfaces/unplash";
+import ImageCard from "./ImageCard";
 
 interface ImageGalleryProps {
   photos: IUnplash[];
@@ -27,44 +28,37 @@ export default function ImageGallery({
     return window.innerWidth <= 768; // hoặc 640 tùy breakpoint
   };
 
-  const handleImageClick = async (imageId: string) => {
-    if (isMobile()) {
-      router.push(`/photos/${imageId}`);
-      return;
-    }
-    setSelectedImage(null);
-    setSelectedImageData(null);
+  const handleImageClick = useCallback(
+    async (imageId: string) => {
+      if (isMobile()) {
+        router.push(`/photos/${imageId}`);
+        return;
+      }
+      setSelectedImage(null);
+      setSelectedImageData(null);
 
-    const res = await getPhoto(imageId);
-    const imageData = res;
+      const res = await getPhoto(imageId);
+      const imageData = res;
 
-    setSelectedImage(imageData.urls.regular);
-    setSelectedImageData(imageData);
+      setSelectedImage(imageData.urls.regular);
+      setSelectedImageData(imageData);
 
-    window.history.pushState({}, "", `/photos/${imageId}`);
-  };
+      window.history.pushState({}, "", `/photos/${imageId}`);
+    },
+    [router]
+  );
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setSelectedImage(null);
     setSelectedImageData(null);
     router.back();
-  };
+  }, [router]);
 
   return (
     <div className="gallery-container">
       <div className="gallery-grid">
         {photos.map((image: IUnplash) => (
-          <div
-            key={image.id}
-            className="gallery-item"
-            onClick={() => handleImageClick(image.id)}
-          >
-            <img
-              src={image.urls.small}
-              alt={image.alt_description || "Unsplash Image"}
-              className="gallery-image"
-            />
-          </div>
+          <ImageCard key={image.id} image={image} onClick={handleImageClick} />
         ))}
       </div>
 

@@ -17,9 +17,9 @@ export default async function Home({ searchParams }: PageProps) {
   try {
     if (isSearching) {
       photos = await searchPhotos(query, page);
-    } else {
-      photos = await getPhotos(page);
+      return;
     }
+    photos = await getPhotos(page);
   } catch (error) {
     console.error("Error fetching photos:", error);
     return <div>Error fetching photos. Please try again later.</div>;
