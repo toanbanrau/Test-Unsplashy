@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 
 export default function Home() {
  
-  const [seacrhQuery, setSeacrhQuery] = useState<string>("");
+  const [searchQuery, setSeacrhQuery] = useState<string>("");
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
   const [selectedAvaible, setSelectedAvaible] = useState<string>("");
@@ -14,7 +14,7 @@ export default function Home() {
     return data.filter((movie) => {
       const matchesSearch = movie.title
         .toLowerCase()
-        .includes(seacrhQuery.toLowerCase());
+        .includes(searchQuery.toLowerCase());
       const matchesGenre = selectedGenre ? movie.genre === selectedGenre : true;
       const matchesLanguage = selectedLanguage
         ? movie.languages.includes(selectedLanguage)
@@ -26,7 +26,7 @@ export default function Home() {
         matchesGenre && matchesLanguage && matchesPlatform && matchesSearch
       );
     });
-  }, [seacrhQuery, selectedGenre, selectedLanguage, selectedAvaible]);
+  }, [searchQuery, selectedGenre, selectedLanguage, selectedAvaible]);
 
   return (
     <div>
