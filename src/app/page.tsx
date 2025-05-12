@@ -1,79 +1,36 @@
 "use client";
+
 import { data } from "@/data/datamock";
-import MovieCard from "./components/MovieCart";
-import { useMemo, useState } from "react";
+import SeacrhInput from "@/components/HomePage/SeacrhInput";
+import GenreFilter from "@/components/HomePage/GenreFillter";
+import LanguageFilter from "@/components/HomePage/LanguageFilter";
+import AvailableFilter from "@/components/HomePage/AvaibleFilter";
+import "../assets/styles/Home.css";
+import MovieList from "@/components/HomePage/MovieList";
+import useFilteredMovies from "@/hook/useFilter";
+import useQueryParams from "@/hook/useQueryParams";
 
 export default function Home() {
- 
-  const [searchQuery, setSeacrhQuery] = useState<string>("");
-  const [selectedGenre, setSelectedGenre] = useState<string>("");
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
-  const [selectedAvaible, setSelectedAvaible] = useState<string>("");
+  
+ const { searchQuery, selectedGenre, selectedLanguage, selectedAvailable } =
+    useQueryParams();
 
-  const filteredData = useMemo(() => {
-    return data.filter((movie) => {
-      const matchesSearch = movie.title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      const matchesGenre = selectedGenre ? movie.genre === selectedGenre : true;
-      const matchesLanguage = selectedLanguage
-        ? movie.languages.includes(selectedLanguage)
-        : true;
-      const matchesPlatform = selectedAvaible
-        ? movie.availableOn.includes(selectedAvaible)
-        : true;
-      return (
-        matchesGenre && matchesLanguage && matchesPlatform && matchesSearch
-      );
-    });
-  }, [searchQuery, selectedGenre, selectedLanguage, selectedAvaible]);
+  const filteredData = useFilteredMovies({
+    data,
+    searchQuery,
+    selectedGenre,
+    selectedLanguage,
+    selectedAvailable,
+  });
 
   return (
-    <div>
-      <h1>Movie List</h1>
-      <label htmlFor="">Search</label>
-      <input type="text" onChange={(e) => setSeacrhQuery(e.target.value)} />
-
-      <label htmlFor="">Thể Loại</label>
-      <select onChange={(e) => setSelectedGenre(e.target.value)} name="" id="">
-        <option value="">All</option>
-        <option value="Sci-Fi">Sci-Fi</option>
-        <option value="Thriller">Thriller</option>
-        <option value="Crime">Crime </option>
-      </select>
-      <label htmlFor="">Language</label>
-      <select
-        onChange={(e) => setSelectedLanguage(e.target.value)}
-        name=""
-        id=""
-      >
-        <option value="">All</option>
-        <option value="English">English</option>
-        <option value="Italian">Italian</option>
-        <option value="Latin">Latin </option>
-        <option value="Korean">Korean </option>
-        <option value="Japanese">Japanese </option>
-        <option value="French">French </option>
-      </select>
-      <label htmlFor="">Avaible</label>
-      <select
-        onChange={(e) => setSelectedAvaible(e.target.value)}
-        name=""
-        id=""
-      >
-        <option value="">All</option>
-        <option value="Hulu">Hulu</option>
-        <option value="Amazon Prime">Amazon Prime</option>
-        <option value="Netflix">Netflix </option>
-        <option value="HBO Max">HBO Max </option>
-        <option value="Paramount">Paramount </option>
-        <option value="Apple TV">Apple TV </option>
-      </select>
-      <div className="movie-list">
-        {filteredData.map((movie, index) => (
-          <MovieCard key={index} movie={movie} />
-        ))}
-      </div>
+    <div className="home-container">
+      <h1 className="title-home">Movie List</h1>
+      <SeacrhInput />
+      <GenreFilter data={data} />
+      <LanguageFilter data={data} />
+      <AvailableFilter data={data} />
+      <MovieList movies={filteredData} />
     </div>
   );
 }

@@ -1,10 +1,10 @@
 "use client";
-import { Movie } from "@/data/datamock";
-import React from "react";
-import "../globals.css";
-import { useRouter } from "next/navigation";
 
-const MovieCard: React.FC<{ movie: Movie }> = ({ movie }) => {
+import React from "react";
+import { useRouter } from "next/navigation";
+import { Movie } from "@/interface/movie";
+
+const MovieCard = ({ movie }: { movie: Movie }) => {
   const route = useRouter();
   return (
     <div
@@ -23,7 +23,6 @@ const MovieCard: React.FC<{ movie: Movie }> = ({ movie }) => {
       <p>
         <strong>Duration:</strong> {movie.duration} mins
       </p>
-      
     </div>
   );
 };
