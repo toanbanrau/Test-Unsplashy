@@ -9,6 +9,8 @@ interface UseFilteredMoviesProps {
   selectedAvailable: string;
 }
 
+
+
 export default function useFilteredMovies({
   data,
   searchQuery,
@@ -17,6 +19,7 @@ export default function useFilteredMovies({
   selectedAvailable,
 }: UseFilteredMoviesProps) {
   return useMemo(() => {
+
     return data.filter((movie) => {
       const matchesSearch = movie.title
         .toLowerCase()

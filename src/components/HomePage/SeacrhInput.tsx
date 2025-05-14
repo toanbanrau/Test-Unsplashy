@@ -1,15 +1,27 @@
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function SearchFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("search") || "";
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("search") || ""
+  );
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("search", searchQuery);
+      router.replace(`?${params.toString()}`);
+    }, 300);
+    return () => {
+      clearTimeout(handler);
+    };
+  });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("search", e.target.value);
-    router.replace(`?${params.toString()}`);
+    setSearchQuery(e.target.value);
   };
 
   return (

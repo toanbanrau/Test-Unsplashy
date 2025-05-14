@@ -10,9 +10,11 @@ export interface Movie {
   ratings: number[];
   languages: string[];
   availableOn: string[];
-  reviews: { user: string; comment: string; score: number }[];
+  reviews: MovieVeview[];
   awards: string[];
   isAvailable: boolean;
   tags: string[];
 }
+
+export interface MovieVeview { user: string; comment: string; score: number }
 

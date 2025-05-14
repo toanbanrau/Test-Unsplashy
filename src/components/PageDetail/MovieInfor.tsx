@@ -1,17 +1,12 @@
 'use client";';
 
+import { Movie } from "@/interface/movie";
+
 interface MovieInforProps {
-  title: string;
-  description: string;
-  genre: string;
-  languages: string[];
-  cast: string[];
-  availableOn: string[];
-  awards: string[];
-  tags: string[];
+  movie: Partial<Movie>; // omit pick
 }
 
-export default function MovieInfor({ movie }: { movie: MovieInforProps }) {
+export default function MovieInfor({ movie }: MovieInforProps) {
   return (
     <>
       <h1>{movie.title}</h1>
@@ -20,25 +15,25 @@ export default function MovieInfor({ movie }: { movie: MovieInforProps }) {
         <strong>Genre:</strong> {movie.genre}
       </p>
       <p>
-        <strong>Languages:</strong> {movie.languages.join(", ")}
+        <strong>Languages:</strong> {movie.languages?.join(", ")}
       </p>
       <p>
         <strong>Description:</strong> {movie.description}
       </p>
       <p>
-        <strong>Cast:</strong> {movie.cast.join(", ")}
+        <strong>Cast:</strong> {movie.cast?.join(", ")}
       </p>
       <p>
-        <strong>Languages:</strong> {movie.languages.join(", ")}
+        <strong>Languages:</strong> {movie.languages?.join(", ")}
       </p>
       <p>
-        <strong>Available On:</strong> {movie.availableOn.join(", ")}
+        <strong>Available On:</strong> {movie.availableOn?.join(", ")}
       </p>
       <p>
-        <strong>Awards:</strong> {movie.awards.join(", ")}
+        <strong>Awards:</strong> {movie.awards?.join(", ")}
       </p>
       <p>
-        <strong>Tags:</strong> {movie.tags.join(", ")}
+        <strong>Tags:</strong> {movie.tags?.join(", ")}
       </p>
     </>
   );

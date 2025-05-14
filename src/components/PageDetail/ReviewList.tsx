@@ -1,17 +1,12 @@
+import { Movie, MovieVeview } from "@/interface/movie";
 import React, { useCallback, useMemo, useState } from "react";
 
 interface ReviewListProps {
-  user: string;
-  comment: string;
-  score: number;
+  initialReview: Pick<Movie, "reviews">;
 }
 
-const ReviewList = ({
-  initialReview,
-}: {
-  initialReview: ReviewListProps[];
-}) => {
-  const [reviews, setReviews] = useState<ReviewListProps[]>(initialReview);
+const ReviewList = ({ initialReview }: ReviewListProps) => {
+  const [reviews, setReviews] = useState<MovieVeview[]>(initialReview.reviews);
   const averageScore = useMemo(() => {
     if (reviews.length === 0) return 0;
     const total = reviews.reduce((sum, r) => sum + r.score, 0);

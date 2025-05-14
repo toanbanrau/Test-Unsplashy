@@ -1,6 +1,6 @@
 import { useSearchParams } from "next/navigation";
 
-export default function useQueryParams() {
+export default function useMovieQueryParams() {
   const searchParams = useSearchParams();
 
   const searchQuery = searchParams.get("search") || "";

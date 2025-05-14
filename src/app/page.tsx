@@ -7,8 +7,8 @@ import LanguageFilter from "@/components/HomePage/LanguageFilter";
 import AvailableFilter from "@/components/HomePage/AvaibleFilter";
 import "../assets/styles/Home.css";
 import MovieList from "@/components/HomePage/MovieList";
-import useFilteredMovies from "@/hook/useFilter";
-import useQueryParams from "@/hook/useQueryParams";
+import useFilteredMovies from "@/hook/useMovieFilter";
+import useQueryParams from "@/hook/useMovieQueryParams";
 
 export default function Home() {
   
