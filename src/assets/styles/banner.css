@@ -3,7 +3,7 @@
 
 
 .container-banner {
-  padding-top: 100px;
+
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
@@ -186,5 +186,17 @@
 @media (min-width: 768px) {
   .sidebar {
       width: 25%;
+   
+  }
+
+}
+@media (max-width:768px){
+    .container-banner {
+    margin-top: 20px;
+  }
+}
+@media (max-width:480px){
+    .container-banner {
+    margin-top: 20px;
   }
 }

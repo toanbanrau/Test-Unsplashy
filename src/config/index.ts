@@ -7,7 +7,6 @@ export const config = {
     searchPhotos: "/search/photos",
     getPhotos: "/photos",
     getPhoto: "/photos/:id",
-    perPage: 30,
-    
+    perPage: 20,
   },
 };

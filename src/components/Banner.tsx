@@ -17,7 +17,7 @@ const Banner = () => {
           <button>Passez à Unsplash+</button>
         </div>
       </div>
-  
+
       <div className="sidebar">
         <div className="collections">
           <h2>Collections</h2>
