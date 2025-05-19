@@ -1,16 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import "../assets/styles/globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,53 +13,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <header>
-          <div className="header-top">
-            <div className="logo">
-              <img src="unsplash-logo.png" alt="Unsplash Logo" />
-            </div>
-            <div className="search-bar">
-              <form action="/" method="get" className="search-bar">
-                <input
-                  type="text"
-                  name="query"
-                  placeholder="Rechercher des photos et illustrations"
-                  defaultValue=""
-                />
-              </form>
-            </div>
-            <div className="nav-links">
-              <a href="#explore">Explorer</a>
-              <a href="#advertise">Faire votre publicité</a>
-              <a href="#subscribe">Abonnez-vous à Unsplash+</a>
-              <a href="#login">Connexion</a>
-              <a href="#upload">Envoyer une image</a>
-            </div>
-            <div className="hamburger">☰</div>
-          </div>
-          <div className="categories">
-            <a href="#photos" className="active">
-              Photos
-            </a>
-            <a href="#illustrations">Illustrations</a>
-            <a href="#unsplash-plus">Unsplash+</a>
-            <a href="#wallpapers">Wallpapers</a>
-            <a href="#nature">Nature</a>
-            <a href="#3d-renders">Rendus 3D</a>
-            <a href="#architecture">Architecture Et Intérieur</a>
-            <a href="#travel">Voyager</a>
-            <a href="#street-photography">Photographie De Rue</a>
-            <a href="#people">Gens</a>
-            <a href="#animals">Animaux</a>
-            <a href="#experimental">Expérimental</a>
-            <a href="#fashion">Mode &amp; Beauté</a>
-          </div>
-        </header>
-
-        {children}
+      <body className={` font-sans antialiased`}>
+        <main>{children}</main>
       </body>
     </html>
   );

@@ -1,25 +1,36 @@
-// app/page.tsx
+"use client";
 
-import ImageGallery from "./ImageGallery";
+import { data } from "@/data/datamock";
+import SeacrhInput from "@/components/HomePage/SeacrhInput";
+import GenreFilter from "@/components/HomePage/GenreFillter";
+import LanguageFilter from "@/components/HomePage/LanguageFilter";
+import AvailableFilter from "@/components/HomePage/AvaibleFilter";
+import "../assets/styles/Home.css";
+import MovieList from "@/components/HomePage/MovieList";
+import useFilteredMovies from "@/hook/useMovieFilter";
+import useQueryParams from "@/hook/useMovieQueryParams";
 
-const perPage = 30;
+export default function Home() {
+  
+ const { searchQuery, selectedGenre, selectedLanguage, selectedAvailable } =
+    useQueryParams();
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: { query?: string; page?: string };
-}) {
-  const page = parseInt(searchParams.page || "1");
-  const query = searchParams.query || "";
-  const isSearching = query.trim().length > 0;
+  const filteredData = useFilteredMovies({
+    data,
+    searchQuery,
+    selectedGenre,
+    selectedLanguage,
+    selectedAvailable,
+  });
 
-  const url = isSearching
-    ? `https://api.unsplash.com/search/photos?query=${query}&page=${page}&per_page=${perPage}&client_id=RNK_QDDJzZm_9BIFw04b0swgRydz3pyJNFp45UxG0zE`
-    : `https://api.unsplash.com/photos?page=${page}&per_page=${perPage}&client_id=RNK_QDDJzZm_9BIFw04b0swgRydz3pyJNFp45UxG0zE`;
-
-  const res = await fetch(url, { cache: "no-store" });
-  const data = await res.json();
-  const photos = isSearching ? data.results : data;
-
-  return <ImageGallery photos={photos} query={query} page={page} />;
+  return (
+    <div className="home-container">
+      <h1 className="title-home">Movie List</h1>
+      <SeacrhInput />
+      <GenreFilter data={data} />
+      <LanguageFilter data={data} />
+      <AvailableFilter data={data} />
+      <MovieList movies={filteredData} />
+    </div>
+  );
 }
