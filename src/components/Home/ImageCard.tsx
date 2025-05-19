@@ -11,18 +11,22 @@ interface PhotoGridProps {
   onImageClick: (imageId: string) => void;
 }
 
-export default function PhotoGrid({ initialPhotos, query, onImageClick }: PhotoGridProps) {
+export default function PhotoGrid({
+  initialPhotos,
+  query,
+  onImageClick,
+}: PhotoGridProps) {
   const [imageList, setImageList] = useState<IUnplash[]>(initialPhotos);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const observerRef = useRef<HTMLDivElement | null>(null);
-  const isFetchingRef = useRef(false);
+  const [page, setPage] = useState<number>(1);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const isFetchingRef = useRef<boolean>(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setImageList(initialPhotos);
     setPage(1);
     setHasMore(true);
-  }, [initialPhotos, query]);
+  }, [query, initialPhotos]);
 
   const fetchMorePhotos = async () => {
     if (isFetchingRef.current || !hasMore) return;
@@ -35,10 +39,11 @@ export default function PhotoGrid({ initialPhotos, query, onImageClick }: PhotoG
 
       if (newPhotos.length === 0) {
         setHasMore(false);
-      } else {
-        setImageList((prev) => [...prev, ...newPhotos]);
-        setPage((prev) => prev + 1);
+        return;
       }
+
+      setImageList((prev) => [...prev, ...newPhotos]);
+      setPage((prev) => prev + 1);
     } catch (error) {
       console.error("Error fetching photos:", error);
     } finally {
@@ -46,50 +51,73 @@ export default function PhotoGrid({ initialPhotos, query, onImageClick }: PhotoG
     }
   };
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isFetchingRef.current) {
-          fetchMorePhotos();
-        }
-      },
-      { threshold: 0.1 }
+  const resizeAllGridItems = () => {
+    if (!containerRef.current) return;
+
+    const rowHeight = 10;
+
+    const containerWidth = containerRef.current.clientWidth;
+    const computedStyle = getComputedStyle(containerRef.current);
+    const gap = parseInt(computedStyle.gap || "0");
+    const columnCount = Math.floor(
+      containerWidth / (250 + parseInt(computedStyle.gap || "0")) // 250px là minmax width của cột trong css
     );
 
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
-    }
+    const items = containerRef.current.querySelectorAll(".gallery-item");
 
-    return () => {
-      if (observerRef.current) {
-        observer.unobserve(observerRef.current);
+    items.forEach((item, index) => {
+      const image = imageList[index];
+      if (!image) return;
+
+      const columnWidth = containerWidth / columnCount;
+
+      const height = (image.height / image.width) * columnWidth;
+
+      const span = Math.ceil((height + gap) / (rowHeight + gap));
+      (item as HTMLElement).style.gridRowEnd = `span ${span}`;
+    });
+  };
+
+  useEffect(() => {
+    resizeAllGridItems();
+    window.addEventListener("resize", resizeAllGridItems);
+    return () => window.removeEventListener("resize", resizeAllGridItems);
+  }, [imageList]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 100 &&
+        hasMore &&
+        !isFetchingRef.current
+      ) {
+        fetchMorePhotos();
       }
     };
-  }, [hasMore]);
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [hasMore, page, query]);
 
   return (
-    <div className="gallery-container">
-      <div className="gallery-grid">
-        {imageList.map((image) => (
-          <div
-            key={image.id}
-            className="gallery-item"
-            onClick={() => onImageClick(image.id)}
-          >
-            <Image
-              loading="lazy"
-              width={300}
-              height={400}
-              src={image.urls.small}
-              alt={image.alt_description || "Unsplash Image"}
-              className="gallery-image"
-              placeholder="blur"
-              blurDataURL="data:image/jpeg;base64,/9j/2wBDAAoHBwkHBgoJCAkLCwoMDxkQDw4ODx4WFxIZJCAmJSMgIyIOJj4kLC0tMjIyPCsyPTIyPCsyPTIyPCsyPTIyP//AABEIAAUAGAMBIgACEQEDEQH/xAAYAAACAwAAAAAAAAAAAAAAAAAAAQUGB//EAAQAAICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg"
-            />
-          </div>
-        ))}
-      </div>
-      <div ref={observerRef} style={{ height: "1px" }} />
+    <div ref={containerRef} className="gallery-container">
+      {imageList.map((image: IUnplash) => (
+        <div
+          key={image.id}
+          className="gallery-item"
+          onClick={() => onImageClick(image.id)}
+        >
+          <Image
+            loading="lazy"
+            src={image.urls.small}
+            alt={image.alt_description || "Unsplash Image"}
+            width={image.width}
+            height={image.height}
+            style={{ width: "100%", height: "auto", display: "block" }}
+          />
+        </div>
+      ))}
     </div>
   );
 }

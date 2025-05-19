@@ -2,6 +2,8 @@ export interface IUnplash {
   id: string;
   created_at?: string;
   alt_description?: string;
+  width: number;
+  height: number;
   urls: {
     small: string;
     regular: string;
@@ -20,6 +22,6 @@ interface IUser {
   };
 }
 
- interface IUserLinks {
+interface IUserLinks {
   html: string;
 }
