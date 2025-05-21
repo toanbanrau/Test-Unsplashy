@@ -114,7 +114,7 @@ export default function PhotoGrid({
             alt={image.alt_description || "Unsplash Image"}
             width={image.width}
             height={image.height}
-            style={{ width: "100%", height: "auto", display: "block" }}
+          className="image-gallery"
           />
         </div>
       ))}
