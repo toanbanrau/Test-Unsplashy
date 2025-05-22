@@ -8,26 +8,26 @@ const unsplashApi = axios.create({
     Authorization: `Client-ID ${config.unsplash.apiKey}`,
    }
 });
-export const getPhotos = async (page: number): Promise<IUnplash[]> => {
+export const getPhotos = async (
+  page: number,
+  query?: string
+): Promise<IUnplash[]> => {
   try {
-    const response = await unsplashApi.get(config.unsplash.getPhotos, {
-      params: { page, per_page: config.unsplash.perPage },
-    });
-    return response.data;
+    const endpoint = query
+      ? config.unsplash.searchPhotos
+      : config.unsplash.getPhotos;
+
+    const params = {
+      page,
+      per_page: config.unsplash.perPage,
+      ...(query ? { query } : {}),
+    };
+
+    const response = await unsplashApi.get(endpoint, { params });
+
+    return query ? response.data.results : response.data;
   } catch (error) {
     console.error("Error fetching photos:", error);
-    throw error;
-  }
-};
-
-export const searchPhotos = async (query: string, page: number): Promise<IUnplash[]> => {
-  try {
-    const response = await unsplashApi.get(config.unsplash.searchPhotos, {
-      params: { query, page, per_page: config.unsplash.perPage },
-    });
-    return response.data.results;
-  } catch (error) {
-    console.error("Error fetching search results:", error);
     throw error;
   }
 };

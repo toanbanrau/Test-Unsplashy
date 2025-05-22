@@ -9,8 +9,7 @@ export default async function PhotoDetail({
 }: {
   params: { id: string };
 }) {
-  const res = await getPhoto(params.id);
-  const data = res;
+  const data = await getPhoto(params.id);
 
   return (
     <div className="unsplash-detail">

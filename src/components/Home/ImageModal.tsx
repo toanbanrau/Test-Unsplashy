@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import { getPhoto } from "@/services/unplashService";
 import { IUnplash } from "@/interfaces/unplash";
 
-interface PhotoModalProps {
+interface ImageModalProps {
   imageId: string | null;
   onClose: () => void;
 }
 
-export default function PhotoModal({ imageId, onClose }: PhotoModalProps) {
+export default function ImageModal({ imageId, onClose }: ImageModalProps) {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedImageData, setSelectedImageData] = useState<IUnplash | null>(

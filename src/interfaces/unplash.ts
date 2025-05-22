@@ -13,12 +13,13 @@ export interface IUnplash {
   likes?: number;
   links: IUserLinks;
 }
+
 interface IUser {
   name: string;
   username: string;
   links: IUserLinks;
   profile_image: {
-    medium: string; // Định nghĩa kiểu cho `profile_image.medium`
+    medium: string;
   };
 }
 

@@ -2,20 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { getPhotos, searchPhotos } from "@/services/unplashService";
+import { getPhotos } from "@/services/unplashService";
 import { IUnplash } from "@/interfaces/unplash";
 
-interface PhotoGridProps {
+interface ImageCardProps {
   initialPhotos: IUnplash[];
   query: string;
   onImageClick: (imageId: string) => void;
 }
 
-export default function PhotoGrid({
+export default function ImageCard({
   initialPhotos,
   query,
   onImageClick,
-}: PhotoGridProps) {
+}: ImageCardProps) {
   const [imageList, setImageList] = useState<IUnplash[]>(initialPhotos);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -33,16 +33,18 @@ export default function PhotoGrid({
     isFetchingRef.current = true;
 
     try {
-      const newPhotos = query
-        ? await searchPhotos(query, page + 1)
-        : await getPhotos(page + 1);
+      const newPhotos = await getPhotos(page + 1, query);
 
       if (newPhotos.length === 0) {
         setHasMore(false);
         return;
       }
 
-      setImageList((prev) => [...prev, ...newPhotos]);
+      setImageList((prev) => {
+        const existingIds = new Set(prev.map((img) => img.id));
+        const filtered = newPhotos.filter((img) => !existingIds.has(img.id));
+        return [...prev, ...filtered];
+      });
       setPage((prev) => prev + 1);
     } catch (error) {
       console.error("Error fetching photos:", error);
@@ -54,14 +56,21 @@ export default function PhotoGrid({
   const resizeAllGridItems = () => {
     if (!containerRef.current) return;
 
-    const rowHeight = 10;
-
+    const rowHeight = 20;
     const containerWidth = containerRef.current.clientWidth;
     const computedStyle = getComputedStyle(containerRef.current);
     const gap = parseInt(computedStyle.gap || "0");
-    const columnCount = Math.floor(
-      containerWidth / (250 + parseInt(computedStyle.gap || "0")) // 250px là minmax width của cột trong css
-    );
+
+    let columnCount = 4;
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      columnCount = 2;
+    }
+    if (window.matchMedia("(max-width: 480px)").matches) {
+      columnCount = 1;
+    }
+
+    const columnWidth =
+      (containerWidth - gap * (columnCount - 1)) / columnCount;
 
     const items = containerRef.current.querySelectorAll(".gallery-item");
 
@@ -69,10 +78,7 @@ export default function PhotoGrid({
       const image = imageList[index];
       if (!image) return;
 
-      const columnWidth = containerWidth / columnCount;
-
       const height = (image.height / image.width) * columnWidth;
-
       const span = Math.ceil((height + gap) / (rowHeight + gap));
       (item as HTMLElement).style.gridRowEnd = `span ${span}`;
     });
@@ -114,7 +120,7 @@ export default function PhotoGrid({
             alt={image.alt_description || "Unsplash Image"}
             width={image.width}
             height={image.height}
-          className="image-gallery"
+            className="image-gallery"
           />
         </div>
       ))}

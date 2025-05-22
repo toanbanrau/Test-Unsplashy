@@ -177,12 +177,17 @@
 .pagination-button:hover {
   background-color: #d1d5db;
 }
+.no-photo-message{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .gallery-grid {
-    column-count: 2;
-    column-gap: 16px;
+  .gallery-container {
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
   }
   .gallery-item {
     width: 100%;
@@ -212,12 +217,9 @@
   .seacrh-input {
     display: none;
   }
-  .gallery-grid {
-    min-width: calc(100dvw - 40px);
-  }
 
-  .gallery-grid {
-    column-count: 1;
+  .gallery-container {
+    grid-template-columns: 1fr;
   }
  
   .gallery-item {
