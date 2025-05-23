@@ -74,28 +74,28 @@
   top: 20px;
   left: 20px;
   color: #1f2937;
-}
 
-.promo-text h1 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
 
-.promo-text p {
-  font-size: 16px;
-  color: #6b7280;
-  margin-bottom: 20px;
-}
+  p {
+    font-size: 16px;
+    color: #6b7280;
+    margin-bottom: 20px;
+  }
 
-.promo-text button {
-  background-color: #000;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
+  button {
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+  }
 }
 
 .promo-text button:hover {

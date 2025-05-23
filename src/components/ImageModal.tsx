@@ -6,79 +6,79 @@ import { getPhoto } from "@/services/unplashService";
 import { IUnplash } from "@/interfaces/unplash";
 
 interface ImageModalProps {
-  imageId: string | null;
+  imageId: string;
   onClose: () => void;
 }
 
 export default function ImageModal({ imageId, onClose }: ImageModalProps) {
+  const [image, setImage] = useState<IUnplash | null>(null);
   const router = useRouter();
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedImageData, setSelectedImageData] = useState<IUnplash | null>(
-    null
-  );
 
   useEffect(() => {
-    if (!imageId) return;
-
     const fetchImage = async () => {
-      setSelectedImage(null);
-      setSelectedImageData(null);
-
-      const res = await getPhoto(imageId);
-      const imageData = res;
-
-      setSelectedImage(imageData.urls.regular);
-      setSelectedImageData(imageData);
-
-      window.history.pushState({}, "", `/photos/${imageId}`);
+      const data = await getPhoto(imageId);
+      setImage(data);
     };
 
     fetchImage();
+
+    // Push to URL when mounted
+    window.history.pushState({}, "", `/photos/${imageId}`);
+
+    // Prevent background scroll
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      // Restore scroll when modal unmounts
+      document.body.style.overflow = "";
+    };
   }, [imageId]);
 
   const handleClose = () => {
-    setSelectedImage(null);
-    setSelectedImageData(null);
-    router.back();
+    setImage(null);
     onClose();
+    router.back(); // return to previous route
   };
 
-  if (!selectedImage || !selectedImageData) return null;
+  if (!image) return null;
 
   return (
-    <div className="modal" onClick={handleClose}>
+    <div
+      className="modal"
+      onClick={handleClose}
+      role="dialog"
+      aria-modal="true"
+    >
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <button className="modal-close-button" onClick={handleClose}>
             ✕
           </button>
           <div className="modal-info">
-            <span className="modal-photographer">
-              {selectedImageData?.user.name || "Photographer"}
-            </span>
+            <span className="modal-photographer">{image.user.name}</span>
           </div>
           <div className="modal-actions">
             <button className="modal-action-button">♥</button>
             <button className="modal-action-button">+</button>
             <button className="modal-action-button modal-download">
-              Télécharger
+              Download
             </button>
           </div>
         </div>
         <div className="modal-image-container">
           <img
-            src={selectedImage}
-            alt={selectedImageData?.alt_description || "Image"}
+            src={image.urls.regular}
+            alt={image.alt_description || "Image"}
             className="modal-image"
           />
         </div>
         <p className="modal-text">
-          Photo by
-          <strong>{selectedImageData?.user.name || "Photographer"} </strong>
+          Photo by <strong>{image.user.name}</strong>{" "}
           <a
-            href={selectedImageData?.user?.links.html}
+            href={image.user.links.html}
             target="_blank"
             className="modal-link"
+            rel="noopener noreferrer"
           >
             Unsplash
           </a>

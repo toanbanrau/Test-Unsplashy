@@ -1,57 +1,43 @@
 "use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { IUnplash } from "@/interfaces/unplash";
-import SearchInput from "./Home/SeacrhInput";
-import ImageCard from "./Home/ImageCard";
-import ImageModal from "./Home/ImageModal";
+import ImageCard from "./ImageCard";
+import { useInfiniteScroll } from "@/hook/useInfiniteScroll";
+import { getPhotos } from "@/services/unplashService";
 import "../assets/styles/imagegallery.css";
-import { useIsMobile } from "@/hook/useMobile";
+import { useMasonryLayout } from "@/hook/useMasonryLayout";
 
 interface ImageGalleryProps {
-  photos: IUnplash[];
-  query: string;
+  images: IUnplash[];
+  query?: string;
 }
 
-export default function ImageGallery({ photos, query }: ImageGalleryProps) {
-  const router = useRouter();
-  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+export default function ImageGallery({ images: initialPhotos, query = "" }: ImageGalleryProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const { dataList: imageList } = useInfiniteScroll<IUnplash>({
+    initialData: initialPhotos,
+    fetchData: getPhotos,
+    query,
+    threshold: 100
+  });
 
-  const isMobile = useIsMobile();
-
-  const handleImageClick = (imageId: string) => {
-    if (isMobile) {
-      router.push(`/photos/${imageId}`);
-      return;
+  useMasonryLayout(containerRef, imageList, {
+    itemSelector: ".gallery-item",
+    rowHeight: 10,
+    gapSize: 20,
+    columnCounts: {
+      default: 4,
+      tablet: 2,
+      mobile: 1
     }
-    setSelectedImageId(imageId);
-  };
-
-  const handleSearch = (searchQuery: string) => {
-    router.push(`search/?query=${encodeURIComponent(searchQuery)}`);
-  };
+  });
 
   return (
-    <>
-      {query && <SearchInput initialQuery={query} onSearch={handleSearch} />}
-      {photos.length === 0 ? (
-        <div className="no-photo-message">
-          Không có ảnh nào phù hợp với từ khóa.
-        </div>
-      ) : (
-        <>
-          <ImageCard
-            initialPhotos={photos}
-            query={query}
-            onImageClick={handleImageClick}
-          />
-          <ImageModal
-            imageId={selectedImageId}
-            onClose={() => setSelectedImageId(null)}
-          />
-        </>
-      )}
-    </>
+    <div ref={containerRef} className="gallery-container">
+      {imageList.map((image) => (
+        <ImageCard key={image.id} image={image} />
+      ))}
+    </div>
   );
 }

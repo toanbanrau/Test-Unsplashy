@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import useDebounce from "@/hook/useDebounce";
-import "../../assets/styles/searchinput.css";
+import "../assets/styles/searchinput.css";
 
 interface SearchInputProps {
   initialQuery: string;
