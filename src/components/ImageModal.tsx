@@ -1,35 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getPhoto } from "@/services/unplashService";
 import { IUnplash } from "@/interfaces/unplash";
 
 interface ImageModalProps {
-  imageId: string;
+  image: IUnplash;
   onClose: () => void;
 }
 
-export default function ImageModal({ imageId, onClose }: ImageModalProps) {
-  const [image, setImage] = useState<IUnplash | null>(null);
+export default function ImageModal({ image, onClose }: ImageModalProps) {
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchImage = async () => {
-      const data = await getPhoto(imageId);
-      setImage(data);
-    };
-
-    fetchImage();
-
- 
-    window.history.pushState({}, "", `/photos/${imageId}`);
-  }, [imageId]);
-
   const handleClose = () => {
-    setImage(null);
     onClose();
-    router.back();
+    router.back(); 
   };
 
   if (!image) return null;

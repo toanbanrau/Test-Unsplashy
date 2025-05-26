@@ -20,6 +20,7 @@ export default function ImageCard({ image }: ImageCardProps) {
       return;
     }
     setShowModal(true);
+    window.history.pushState({}, '', `/photos/${image.id}`);
   };
 
   return (
@@ -35,7 +36,7 @@ export default function ImageCard({ image }: ImageCardProps) {
         />
       </div>
       {showModal && (
-        <ImageModal imageId={image.id} onClose={() => setShowModal(false)} />
+        <ImageModal image={image} onClose={() => setShowModal(false)} />
       )}
     </>
   );
