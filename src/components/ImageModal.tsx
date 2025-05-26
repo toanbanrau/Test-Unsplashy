@@ -22,22 +22,14 @@ export default function ImageModal({ imageId, onClose }: ImageModalProps) {
 
     fetchImage();
 
-    // Push to URL when mounted
+ 
     window.history.pushState({}, "", `/photos/${imageId}`);
-
-    // Prevent background scroll
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      // Restore scroll when modal unmounts
-      document.body.style.overflow = "";
-    };
   }, [imageId]);
 
   const handleClose = () => {
     setImage(null);
     onClose();
-    router.back(); // return to previous route
+    router.back();
   };
 
   if (!image) return null;

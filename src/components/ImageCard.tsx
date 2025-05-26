@@ -17,9 +17,9 @@ export default function ImageCard({ image }: ImageCardProps) {
   const handleClick = () => {
     if (isMobile) {
       router.push(`/photos/${image.id}`);
-    } else {
-      setShowModal(true);
+      return;
     }
+    setShowModal(true);
   };
 
   return (
