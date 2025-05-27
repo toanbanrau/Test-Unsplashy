@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import useDebounce from "@/hook/useDebounce";
+import useDebounce from "@/hooks/useDebounce";
 import "../assets/styles/searchinput.css";
 
 interface SearchInputProps {

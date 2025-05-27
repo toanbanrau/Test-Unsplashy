@@ -2,7 +2,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { IUnplash } from "@/interfaces/unplash";
 import ImageModal from "./ImageModal";
-import { useIsMobile } from "@/hook/useMobile";
+import { useIsMobile } from "@/hooks/useMobile";
 import { useRouter } from "next/navigation";
 
 interface ImageCardProps {

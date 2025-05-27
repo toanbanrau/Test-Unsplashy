@@ -4,7 +4,7 @@ import ImageGallery from "@/components/ImageGallery";
 import React, { useEffect } from "react";
 import { getPhotos } from "@/services/unplashService";
 import { IUnplash } from "@/interfaces/unplash";
-import '../../assets/styles/searchpage.css'
+import "../../assets/styles/searchpage.css";
 import SearchInput from "@/components/SeacrhInput";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -38,32 +38,27 @@ export default function SearchPhoto() {
   }, [query]);
 
   const handleSearch = (searchQuery: string) => {
-
     const params = new URLSearchParams(searchParams.toString());
-    if (searchQuery) {
-      params.set("query", searchQuery);
-    } else {
+    if (!searchQuery) {
       params.delete("query");
+      router.push(`/search?${params.toString()}`);
+      return;
     }
+
+    params.set("query", searchQuery);
     router.push(`/search?${params.toString()}`);
   };
 
   return (
     <div className="search-container">
-      <SearchInput 
-        initialQuery={query} 
-        onSearch={handleSearch}
-      />
-      
+      <SearchInput initialQuery={query} onSearch={handleSearch} />
+
       {isLoading ? (
         <div className="loading">Loading...</div>
       ) : images.length === 0 && query ? (
         <div className="no-results">No images found for "{query}"</div>
       ) : (
-        <ImageGallery 
-          images={images} 
-          query={query}
-        />
+        <ImageGallery images={images} query={query} />
       )}
     </div>
   );

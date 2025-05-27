@@ -2,24 +2,26 @@
 import { useRef } from "react";
 import { IUnplash } from "@/interfaces/unplash";
 import ImageCard from "./ImageCard";
-import { useInfiniteScroll } from "@/hook/useInfiniteScroll";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { getPhotos } from "@/services/unplashService";
 import "../assets/styles/imagegallery.css";
-import { useMasonryLayout } from "@/hook/useMasonryLayout";
+import { useMasonryLayout } from "@/hooks/useMasonryLayout";
 
 interface ImageGalleryProps {
   images: IUnplash[];
   query?: string;
 }
 
-export default function ImageGallery({ images: initialPhotos, query = "" }: ImageGalleryProps) {
+export default function ImageGallery({
+  images: initialPhotos,
+  query = "",
+}: ImageGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  const { dataList: imageList } = useInfiniteScroll<IUnplash>({
+
+  const { dataList: imageList } = useInfiniteScroll({
     initialData: initialPhotos,
     fetchData: getPhotos,
     query,
-    threshold: 100
   });
 
   useMasonryLayout(containerRef, imageList, {
@@ -29,8 +31,8 @@ export default function ImageGallery({ images: initialPhotos, query = "" }: Imag
     columnCounts: {
       default: 4,
       tablet: 2,
-      mobile: 1
-    }
+      mobile: 1,
+    },
   });
 
   return (

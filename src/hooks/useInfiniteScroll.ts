@@ -30,11 +30,11 @@ export function useInfiniteScroll<T extends { id: string }>({
       setHasMore(initialData.length > 0);
       isInitialMount.current = true;
       isFetchingRef.current = false;
-    } else {
-      // Nếu chỉ initialData thay đổi
-      setDataList(initialData);
-      setHasMore(initialData.length > 0);
+      return;
     }
+    setDataList(initialData);
+    setHasMore(initialData.length > 0);
+ 
   }, [query, initialData]);
 
   const fetchMore = useCallback(async () => {
