@@ -1,48 +1,53 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import useDebounce from "@/hooks/useDebounce";
-import "../assets/styles/searchinput.css";
-
 interface SearchInputProps {
-  initialQuery: string;
-  onSearch: (query: string) => void;
+  variant?: "header" | "searchPage";
+  debounceOnChange?: boolean;
+  initialValue?: string;
 }
 
 export default function SearchInput({
-  initialQuery,
-  onSearch,
+  debounceOnChange = false,
+  initialValue = "",
+  variant = "header",
 }: SearchInputProps) {
-  const [searchValue, setSearchValue] = useState(initialQuery);
-  const debouncedSearchValue = useDebounce(searchValue, 300);
+  const router = useRouter();
+  const [searchValue, setSearchValue] = useState(initialValue);
+  const debouncedValue = useDebounce(searchValue, 500);
 
   useEffect(() => {
-    if (debouncedSearchValue && debouncedSearchValue !== initialQuery) {
-      onSearch(debouncedSearchValue);
+    if (debounceOnChange && debouncedValue.trim()) {
+      router.replace(`/search?query=${encodeURIComponent(debouncedValue)}`, {
+        scroll: false,
+      });
     }
-  }, [debouncedSearchValue, initialQuery, onSearch]);
+  }, [debounceOnChange, debouncedValue, router]);
 
-  const handleClear = () => {
-    setSearchValue("");
+  const handleClear = () => setSearchValue("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!searchValue.trim()) return;
+    router.push(`/search?query=${encodeURIComponent(searchValue)}`);
   };
-
   return (
-    <div className="search-input">
-      <label htmlFor="search">Search</label>
-      <div className="input-container">
-        <input
-          id="search" 
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          type="text"
-          placeholder="Search photos..."
-        />
-        {searchValue && (
-          <button className="clear-button" onClick={handleClear}>
-            ✕
-          </button>
-        )}
-      </div>
-    </div>
+    <form onSubmit={handleSubmit} className={`search-form-${variant} `}>
+      <input
+        className={`search-input-${variant}`}
+        id="search"
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        type="text"
+        placeholder="Search photos..."
+      />
+      {searchValue && (
+        <button type="button" className="clear-button" onClick={handleClear}>
+          ✕
+        </button>
+      )}
+    </form>
   );
 }

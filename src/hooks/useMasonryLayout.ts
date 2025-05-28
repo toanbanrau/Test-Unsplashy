@@ -85,9 +85,9 @@ export function useMasonryLayout(
     images?.forEach(img => {
       if (img.complete) {
         handleImageLoad();
-      } else {
-        img.addEventListener("load", handleImageLoad);
-      }
+        return
+      } 
+      img.addEventListener("load", handleImageLoad);
     });
 
     return () => {

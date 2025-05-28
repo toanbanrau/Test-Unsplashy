@@ -16,7 +16,7 @@ export default function ImageModal({ image, onClose }: ImageModalProps) {
     router.back(); 
   };
 
-  if (!image) return null;
+  if (!image) return;
 
   return (
     <div

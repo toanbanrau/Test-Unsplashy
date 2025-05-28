@@ -6,10 +6,9 @@ import { getPhotos } from "@/services/unplashService";
 import { IUnplash } from "@/interfaces/unplash";
 import "../../assets/styles/searchpage.css";
 import SearchInput from "@/components/SeacrhInput";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function SearchPhoto() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const [images, setImages] = React.useState<IUnplash[]>([]);
@@ -21,7 +20,6 @@ export default function SearchPhoto() {
         setImages([]);
         return;
       }
-
       setIsLoading(true);
       try {
         const data = await getPhotos(1, query);
@@ -37,22 +35,18 @@ export default function SearchPhoto() {
     fetchInitialImages();
   }, [query]);
 
-  const handleSearch = (searchQuery: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (!searchQuery) {
-      params.delete("query");
-      router.push(`/search?${params.toString()}`);
-      return;
-    }
-
-    params.set("query", searchQuery);
-    router.push(`/search?${params.toString()}`);
-  };
-
   return (
     <div className="search-container">
-      <SearchInput initialQuery={query} onSearch={handleSearch} />
-
+      <div className="search-label-wrapper">
+        <label className="search-label" htmlFor="search">
+          Search
+        </label>
+        <SearchInput
+          debounceOnChange={true}
+          initialValue={query}
+          variant="searchPage"
+        />
+      </div>
       {isLoading ? (
         <div className="loading">Loading...</div>
       ) : images.length === 0 && query ? (

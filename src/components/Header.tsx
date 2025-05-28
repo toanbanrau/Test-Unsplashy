@@ -4,6 +4,7 @@ import type React from "react";
 import Link from "next/link";
 import "../assets/styles/header.css";
 import Category from "./Category";
+import SearchInput from "./SeacrhInput";
 
 const Header = () => {
   return (
@@ -26,13 +27,7 @@ const Header = () => {
           </Link>
         </div>
         <div className="search-bar">
-          <form action={"/search"}>
-            <input
-              type="text"
-              name="query"
-              placeholder="Rechercher de photos et illustrations"
-            />
-          </form>
+          <SearchInput/>
         </div>
         <div className="user-actions">
           <a href="#" className="subscribe">
