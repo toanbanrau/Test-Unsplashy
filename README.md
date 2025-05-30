@@ -33,13 +33,15 @@ Xây dựng một ứng dụng đếm số nâng cao gồm nhiều chế độ �
   - Toggle múi giờ: UTC, UTC+7, UTC-5
 - Nút “Pause” và “Resume” đồng hồ
 - Mỗi lần Pause → Ghi lại thời gian vào `PauseLog`
-- Bonus: Cho người dùng chọn `timezone` từ dropdown (dynamic option), filter range time pause log
+- Bonus: Cho người dùng chọn `timezone` từ dropdown (dynamic option)
+- filter range time pause log
+
 
 ### Chia component:
 - `ClockDisplay`, `ClockControls`, `PauseLog`
 
 ### Gợi ý dùng:
-`setInterval`, `clearInterval`, `Intl.DateTimeFormat`, `useRef`, `useEffect`
+`setInterval`, `clearInterval`, `Intl.DateTimeFormat`, `useRef`, `useEffect`, zustand with persist
 
 ---
 
